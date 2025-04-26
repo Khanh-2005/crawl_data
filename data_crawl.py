@@ -42,25 +42,7 @@ class DataCollector:
             writer.writerows(data)
         print(f"Data saved to {filename}")
 
-    def save_to_db(self, data, table_name):
-        conn = pyodbc.connect(
-            "Driver={ODBC Driver 17 for SQL Server};"
-            "Server=tcp:your_server.database.windows.net,1433;"
-            f"Database={self.db_name};"
-            "Uid=your_username;"
-            "Pwd=your_password;"
-            "Encrypt=yes;"
-            "TrustServerCertificate=no;"
-            "Connection Timeout=30;"
-        )
-        cursor = conn.cursor()
-        cursor.execute(f"CREATE TABLE IF NOT EXISTS {table_name} (ProductName NVARCHAR(255), Price NVARCHAR(50))")
-        for item in data:
-            cursor.execute(f"INSERT INTO {table_name} (ProductName, Price) VALUES (?, ?)", item)
-        conn.commit()
-        cursor.close()
-        conn.close()
-        print(f"Data inserted into {table_name} in {self.db_name} database.")
+    
 
 
 # Example usage
@@ -68,10 +50,10 @@ collector = DataCollector(
     url="https://cellphones.com.vn/laptop.html",
     css_selector_name=".product__name",
     css_selector_price=".product__price--show",
-    db_name="ProductDB"
+  
 )
 
 # Collect data and save
 data = collector.collect_data()
 collector.save_to_csv(data, "product_data.csv")
-collector.save_to_db(data, "LaptopData")
+
